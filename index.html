@@ -41,27 +41,70 @@
 					</div>
 				</section>
 				<section>
-				    <h2>CI/CD</h2>
-				    <pre><code data-trim data-noescape data-line-numbers>
+					<section>
+					    <h2>CI/CD</h2>
+					    <pre><code data-trim data-noescape data-line-numbers>
 image: maven:3.6.3-openjdk-11-slim
 
 stages:
   - test
   - deploy
 
-before_script:
-
-test:
+testing:
     stage: test
     script:
-      - echo "All tests successfull"
+        - cd greenc/backend
+        - mvn test
+        - cd ..
+    artifacts:
+        when: always
+        reports:
+            junit:
+                - greenc/backend/target/surefire-reports/TEST-*.xml
+					    </code></pre>
+					</section>
+					<section>
+						<h2>CI/CD</h2>
+						<img src="assets/test-report2.png">
+					</section>
+					<section>
+						<h2>CI/CD</h2>
+						<img src="assets/test-report3.png">
+					</section>
+					<section>
+						<h2>CI/CD</h2>
+						<img src="assets/test-report1.png">
+					</section>
+					<section>
+						<h2>CI/CD</h2>
+						<pre><code data-trim data-noescape data-line-numbers>
+staging:
+    stage: deploy
+    script:
+      - rm -rf requirements_engineering protokolle feature_model greenc/Dockerfile .gitlab-ci.yml
+      - mv greenc/* .
+      - rm -r greenc
+      - mv frontend/staging.xml frontend/pom.xml
+      - apt-get update -qy
+      - apt-get install -y ruby-dev git
+      - gem install dpl
+      - git add .
+      - git commit -m "Deploy just the good stuff"
+      - dpl --provider=heroku --app=$HEROKU_APP_TESTING --api-key=$HEROKU_API_KEY
+    only:
+      - develop
+					    </code></pre>
+					</section>
+					<section>
+						<h2>CI/CD</h2>
 
+						<pre><code data-trim data-noescape data-line-numbers>
 production:
     stage: deploy
     script:
       - rm -rf requirements_engineering protokolle feature_model greenc/Dockerfile .gitlab-ci.yml
       - mv greenc/* .
-      - rm -rf greenc
+      - rm -r greenc
       - apt-get update -qy
       - apt-get install -y ruby-dev git
       - gem install dpl
@@ -70,7 +113,9 @@ production:
       - dpl --provider=heroku --app=$HEROKU_APP_PRODUCTION --api-key=$HEROKU_API_KEY
     only:
       - master
-				    </code></pre>
+					    </code></pre>
+					</section>
+				</section>
 				</section>
 				<section>
 					<section>
@@ -78,15 +123,15 @@ production:
 						<h2>Arbeitsweise</h2>
 						<h4>Gitlab</h4>
 						<ul>
-							<li>develop und master Branch -> Gitflow</li>
+							<li>develop und master Branch &rarr; Gitflow</li>
 							<img src="assets/gitflow.png">
 						</ul>
 					</section>
 					<section>
 						<ul>
 							<li>Pro Issue ein Branch</li>
-							<li>Issue fertig -> Branch in develop gemerged</li>
-							<li>Release -> develop in master gemerged</li>
+							<li>Issue fertig &rarr; Branch in develop gemerged</li>
+							<li>Release &rarr; develop in master gemerged</li>
 						</ul<>
 					</section>
 					<section>
@@ -119,15 +164,15 @@ production:
 						<h6>Erfahrungen:</h6>
 						<ul>
 							<li>Versuch regelmäßige Standupmeetings abzuhalten</li>
-							<li>Gruppenmitglieder haben zu unterschiedliche Zeitplanung -> Studenten,
-								deshalb waren Standupmeetings häufig überflüßig, da nichts passiert ist</li>
+							<li>Studenten &rarr; Gruppenmitglieder haben zu unterschiedliche Zeitplanung</li>
+							<li>Standupmeetings häufig überflüßig, da nichts passiert ist</li>
 						</ul>
 					</section>
 					<section>
 						<h2>Arbeitsweise</h2>
 						<h4>SCRUM?</h4>
 						<ul>
-							<li>Horizontale Teamorganisation -> Rollen waren kaum ausschlaggebend</li>
+							<li>Horizontale Teamorganisation &rarr; Rollen waren kaum ausschlaggebend</li>
 							<li>Arbeitsweise trotzdem mit Sprints und Retrospektiven am Sprintende</li>
 							<li>Teilweise viel zu viele Aufgaben pro Sprint zugewiesen</li>
 						</ul>
@@ -141,7 +186,7 @@ production:
 							<li>Softwareentwicklung und Uni-Alltag nicht einfach kombinierbar</li>
 							<li>Zeitplanung bei unterschiedlicher Alltagsgestaltung schwer</li>
 							<li>Mobprogramming war schwer umsetzbar</li>
-							<li>Unregelmäßigkeit -> wenig Koordination</li>
+							<li>Unregelmäßigkeit &rarr; wenig Koordination</li>
 						</ul>
 					</section>
 					<section>
